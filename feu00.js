@@ -24,21 +24,35 @@ o */
         Fin Si
         Aller à la ligne
     Fin Pour*/
-const showRectangle = (width, hight) => {
-  let line = "o";
-  let column = "|";
-  for (let i = 1; i <= width - 2; i++) {
-    line += "-";
+const showRectangle = (width, height) => {
+  for (let i = 1; i <= height; i++) {
+    let line = ""; // Initialisation de la ligne
+
+    // Générer la première ligne du rectangle
+    if (i === 1 || i === height) {
+      line = "o";
+      for (let j = 1; j <= width - 2; j++) {
+        line += "-";
+      }
+      line += "o";
+    } else {
+      // Générer les lignes verticales pour les autres lignes
+      line = "|";
+      for (let j = 1; j <= width - 2; j++) {
+        line += " ";
+      }
+      line += "|";
+    }
+
+    console.log(line);
   }
-  line += "o";
-  console.log(line);
-  for (let i = 0; i <= hight - 2; i++) {
-    column += "|";
-  }
-  console.log(column);
 };
 
 const width = parseInt(process.argv[2]);
-const hight = parseInt(process.argv[3]);
+const height = parseInt(process.argv[3]);
 
-showRectangle(width, hight);
+if (width <= 2 || height <= 2) {
+  console.error("Veuillez entrer des valeurs supérieures à 2");
+} else {
+  showRectangle(width, height);
+}
