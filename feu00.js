@@ -13,17 +13,6 @@ o---o
 $> python exo.py 1 1
 o */
 
-/*Pour i allant de 1 à hauteur:
-        Si i est égal à 1 OU i est égal à hauteur:
-            Afficher "o" suivi de (largeur - 2) fois le caractère "-"
-            Afficher "o"
-        Sinon:
-            Afficher "|"
-            Afficher (largeur - 2) fois l'espace " "
-            Afficher "|"
-        Fin Si
-        Aller à la ligne
-    Fin Pour*/
 const showRectangle = (width, height) => {
   for (let i = 1; i <= height; i++) {
     let line = ""; // Initialisation de la ligne
