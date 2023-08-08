@@ -11,10 +11,11 @@ $> ruby exo.rb “4 + 21 * (1 - 2 / 2) + 38”
 
 Vous pouvez partir du principe que la chaîne de caractères donnée en argument sera valide.*/
 
-function hasHigherPriority(operator1, operator2) {
+const hasHigherPriority = (operator1, operator2) => {
   const priorities = { "+": 1, "-": 1, "*": 2, "/": 2, "%": 2 };
   return priorities[operator1] >= priorities[operator2];
-}
+};
+
 function performOperation(operand1, operator, operand2) {
   switch (operator) {
     case "+":
@@ -31,28 +32,75 @@ function performOperation(operand1, operator, operand2) {
       throw new Error("Opérateur invalide");
   }
 }
-const evaluateExpression = (expressions) => {
-  const expressionWithoutSpaces = expressions.join("").replace(/\s/g, "");
-  const resultArray = expressionWithoutSpaces.match(
-    /(-?\d+|\+|\*|\/|%|\(|\)|-)/g
-  );
+
+const evaluateExpression = (expression) => {
+  const resultArray = expression.match(/(-?\d+(\.\d+)?|[+\-*\/%()])/g);
+
+  const tokens = [];
+
+  for (const token of resultArray) {
+    tokens.push(token);
+  }
 
   const operands = [];
   const operators = [];
 
-  for (const token of resultArray) {
-    if (/[+\-*/%]/.test(token)) {
-      operators.push(token); // Ajouter l'opérateur à la pile des opérateurs
+  for (let i = 0; i < tokens.length; i++) {
+    const currentToken = tokens[i];
+
+    if (/[+\-*\/%]/.test(currentToken)) {
+      while (
+        operators.length > 0 &&
+        operators[operators.length - 1] !== "(" &&
+        hasHigherPriority(operators[operators.length - 1], currentToken)
+      ) {
+        operands.push(operators.pop());
+      }
+      operators.push(currentToken);
+    } else if (currentToken === "(") {
+      operators.push(currentToken);
+    } else if (currentToken === ")") {
+      while (operators.length > 0 && operators[operators.length - 1] !== "(") {
+        operands.push(operators.pop());
+      }
+      operators.pop();
     } else {
-      operands.push(token); // Ajouter l'opérande à la pile des opérandes
+      operands.push(parseFloat(currentToken));
     }
   }
 
-  return { operators, operands };
+  while (operators.length > 0) {
+    operands.push(operators.pop());
+  }
+
+  return operands;
 };
 
-const expressions = process.argv.slice(2);
-const result = evaluateExpression(expressions);
+const evaluateAndHandlePriority = (operands, operators) => {
+  const valueStack = [];
 
-console.log("Opérateurs trouvés :", result.operators);
-console.log("Opérandes trouvées :", result.operands);
+  for (let i = 0; i < operands.length; i++) {
+    const currentElement = operands[i];
+
+    if (typeof currentElement === "number") {
+      valueStack.push(currentElement);
+    } else if (
+      typeof currentElement === "string" &&
+      /[+\-*\/%]/.test(currentElement)
+    ) {
+      const operator = currentElement;
+      const operand2 = valueStack.pop();
+      const operand1 = valueStack.pop();
+      const result = performOperation(operand1, operator, operand2);
+      valueStack.push(result);
+    }
+  }
+
+  return valueStack[0]; // Le résultat final se trouve au sommet de la pile
+};
+const expression = process.argv[2];
+
+const result = evaluateExpression(expression);
+const finalResult = evaluateAndHandlePriority(result, []);
+
+console.log("Résultat final :", finalResult);
