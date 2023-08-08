@@ -76,7 +76,7 @@ const evaluateExpression = (expression) => {
   return operands;
 };
 
-const evaluateAndHandlePriority = (operands, operators) => {
+const evaluateAndHandlePriority = (operands) => {
   const valueStack = [];
 
   for (let i = 0; i < operands.length; i++) {
