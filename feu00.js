@@ -23,14 +23,18 @@ const showRectangle = (width, height) => {
       for (let j = 1; j <= width - 2; j++) {
         line += "-";
       }
-      line += "o";
+      if (width > 1) {
+        line += "o";
+      }
     } else {
       // Générer les lignes verticales pour les autres lignes
       line = "|";
       for (let j = 1; j <= width - 2; j++) {
         line += " ";
       }
-      line += "|";
+      if (width > 1) {
+        line += "|";
+      }
     }
 
     console.log(line);
@@ -40,8 +44,4 @@ const showRectangle = (width, height) => {
 const width = parseInt(process.argv[2]);
 const height = parseInt(process.argv[3]);
 
-if (width <= 2 || height <= 2) {
-  console.error("Veuillez entrer des valeurs supérieures à 2");
-} else {
-  showRectangle(width, height);
-}
+showRectangle(width, height);
