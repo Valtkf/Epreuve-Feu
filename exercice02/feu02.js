@@ -104,7 +104,7 @@ const getShapeDrawing = (shapeCoordinates) => {
 
   const [row, col] = shapeCoordinates;
 
-  // Crée une nouvelle matrice pour le dessin de la forme avec des tirets
+  // Créé une nouvelle matrice pour le dessin de la forme avec des tirets
   const shapeDrawing = Array.from({ length: boardArray.length }, () =>
     Array(boardArray[0].length).fill("-")
   );
